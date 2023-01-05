@@ -1,0 +1,37 @@
+{import '../messages.latte'}
+
+{block content}
+<div class="right_col" role="main">
+    {include messages}
+	<div class="row">
+		<div class="col-xs-12">
+			<h1 class="page-header">Konfigurace tabulky na Homepage</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+			<form n:name="configureTableHPForm" data-toggle="validator">
+				<hr>
+				<ul class="flasherrors" n:if="$form->hasErrors()">
+					<li n:foreach="$form->errors as $error">{$error}</li>
+				</ul>
+				<strong>ČASOVÝ INTERVAL</strong>
+				<div class="form-group">
+                    {foreach $form['interval']->items as $key => $label}
+                        <label n:name="interval:$key"></label>
+						<input n:name="interval:$key" value="{$key}"> {$label}
+						<br>
+                    {/foreach}
+				</div>
+				<hr>
+				<div class="form-group">
+					<label n:name="minCount">MINIMÁLNÍ POČET HLASUJÍCÍCH</label>
+					<br>
+					<select n:name="minCount"></select>
+				</div>
+				<hr>
+				<input n:name="send" class="btn btn-default">
+			</form>
+		</div>
+	</div>
+</div>

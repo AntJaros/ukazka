@@ -1,0 +1,43 @@
+{import '../messages.latte'}
+
+{block content}
+    <div class="right_col" role="main">
+        {include messages}
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="page-header">Nový Adminuser</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form n:name="newAdminuserForm" class="form-horizontal" autocomplete="off">
+                    <ul class="flasherrors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div class="form-group">
+                        <label n:name="jmeno" class="col-sm-2 control-label">Jméno:</label>
+                        <div class="col-sm-4">
+                            <input n:name="jmeno" class="form-control" autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label n:name="heslo" class="col-sm-2 control-label">Heslo:</label>
+                        <div class="col-sm-4">
+                            <input n:name="heslo" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label n:name="role" class="col-sm-2 control-label">Role:</label>
+                        <div class="col-sm-4">
+                            <select n:name="role" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-4">
+                            <input n:name="send" class="btn btn-default">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

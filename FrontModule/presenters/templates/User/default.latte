@@ -1,0 +1,94 @@
+{block title}Uživatel {$userDetail->nick} | Dejbod.cz{/block}
+{block description}Uživatel webu Dejbod.cz - {$userDetail->nick}{/block}
+{block content}
+    <header class="container user-header">
+        <div class="row">
+            <div class="col-md-6 col-xl-5 offset-xl-1">
+                <h1 class="mb-5 mb-md-0">{$userDetail->nick}</h1>
+            </div>
+            <div class="col-md-6 col-xl-5 offset-xl-1 user-souhrn">
+                <h2>SOUHRN</h2>
+                <ul class="list-unstyled">
+                    <li>Registrace dne: <span class="detail-value">{$userDetail->datum|date:'d. m. Y'}</span></li>
+                    <li>Počet hodnocení youtuberů: <span class="detail-value">{$ratingCount}</span></li>
+                    <li>Počet komentářů: <span class="detail-value">{$commentCount}</span></li>
+                    <li>Počet hodnocení komentářů: <span class="detail-value">{$likeCommentCount}</span></li>
+                    <li>Počet hodnocení novinek: <span class="detail-value">{$likeNewsCount}</span></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <hr>
+    <section class="container user-popis">
+        <div class="row">
+            <div n:if="$ratings" class="col-md-6 col-xl-5 offset-xl-1">
+                <div class="row">
+                    <div class="col">
+                        <h2>HODNOCENÍ</h2>
+                    </div>
+                    <div class="col mr-4 text-right">
+                        <div class="dropdown show">
+                            <a class="dropdown-toggle sort-toggle" href="#" role="button" id="dropdownSortYoutuber" data-toggle="dropdown" data-offset="0px, -100px" aria-haspopup="true" aria-expanded="false">
+                                ŘADIT DLE
+                            </a>
+                            <div class="dropdown-menu sort-menu" aria-labelledby="dropdownSortYoutuber">
+                                <h6 class="dropdown-header sort-header">ŘADIT DLE</h6>
+                                <a class="dropdown-item sort-item ajax" n:href="sortYoutubers! $userDetail->id,0">ABECEDY</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortYoutubers! $userDetail->id,3">NEJNOVĚJŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortYoutubers! $userDetail->id,4">NEJSTARŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortYoutubers! $userDetail->id,1">NEJLEPŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortYoutubers! $userDetail->id,2">NEJHORŠÍCH</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {snippet sortYoutubers}
+                    <ul class="list-unstyled mb-5 mb-md-0">
+                        {foreach $ratings as $rating}
+                        <li><a n:href="Youtuber:default $rating->slug">{$rating->jmeno}</a>:<img src="{$basePath}/images/{$rating->hodnoceni}stars-blue.svg" class="align-middle ml-3 mr-5" alt="stars"></li>
+                        {/foreach}
+                    </ul>
+                {/snippet}
+            </div>
+            <div n:if="$comments" class="col-md-6 col-xl-5 offset-xl-1">
+                <div class="row">
+                    <div class="col">
+                        <h2>KOMENTÁŘE</h2>
+                    </div>
+                    <div class="col mr-4 text-right">
+                        <div class="dropdown show">
+                            <a class="dropdown-toggle sort-toggle" href="#" role="button" id="dropdownSortCom" data-toggle="dropdown" data-offset="0px, -100px" aria-haspopup="true" aria-expanded="false">
+                                ŘADIT DLE
+                            </a>
+                            <div class="dropdown-menu sort-menu" aria-labelledby="dropdownSortCom">
+                                <h6 class="dropdown-header sort-header">ŘADIT DLE</h6>
+                                <a class="dropdown-item sort-item ajax" n:href="sortComments! $userDetail->id,0">ABECEDY</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortComments! $userDetail->id,3">NEJNOVĚJŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortComments! $userDetail->id,4">NEJSTARŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortComments! $userDetail->id,1">NEJLEPŠÍCH</a>
+                                <a class="dropdown-item sort-item ajax" n:href="sortComments! $userDetail->id,2">NEJHORŠÍCH</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {snippet sortComments}
+                    <ul class="list-unstyled mb-5 mb-md-0">
+                        {foreach $comments as $comment}
+                            <li class="mb-4">
+                                <a n:href="Youtuber:default $comment->slug">{$comment->jmeno}</a>
+                                <span class="komDatumHP">{$comment->datum|timeAgo}</span>
+                                <br>
+                                <span class="user-com">{$comment->komentar}</span>
+                                <br>
+                                {if $comment->hodnoceni}
+                                    <span class="komHodnoceniHP">{$comment->hodnoceni > 0 ? '+' . $comment->hodnoceni : $comment->hodnoceni}</span>
+                                {else}
+                                    <span class="komHodnoceniHP">0</span>
+                                {/if}
+                            </li>
+                        {/foreach}
+                    </ul>
+                {/snippet}
+            </div>
+        </div>
+    </section>

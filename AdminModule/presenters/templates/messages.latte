@@ -1,0 +1,9 @@
+{block messages}
+    <div n:if="$flashes" n:foreach="$flashes as $flash" n:class="alert, $flash->type, alert-white, rounded">
+        <button type="button" data-dismiss="alert" aria-hidden="true" class="close">×</button>
+        <div class="icon">
+            <i class="fa fa-check"></i>
+        </div>
+        {$flash->message}
+    </div>
+{/block}

@@ -1,0 +1,29 @@
+{import '../datagrid.latte'}
+{import '../messages.latte'}
+
+{block styles}
+    {include datagrid-css}
+    {include parent}
+{/block}
+
+{block content}
+    <div class="right_col" role="main">
+        {include messages}
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <h1 class="page-header">Novinky</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                {control articlesGrid}
+            </div>
+        </div>
+    </div>
+{/block}
+
+{block scripts}
+    {include parent}
+    {include datagrid-js}
+{/block}
+

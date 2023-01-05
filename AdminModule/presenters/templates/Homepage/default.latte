@@ -1,0 +1,83 @@
+{import '../messages.latte'}
+
+{block content}
+	<!-- page content -->
+	<div class="right_col" role="main">
+		{include messages}
+		<!-- top tiles -->
+		<div class="row top_tiles">
+			<div class="animated flipInY col-md-3 col-sm-6 col-xs-12">
+				<div class="tile-stats">
+					<div class="icon"><i class="fa fa-caret-square-o-right"></i></div>
+					<h3>Počet youtuberů</h3>
+					<div class="count">
+						<div class="huge">{$youtubersCount}</div>
+					</div>
+					<p>
+						<a class="green" n:href="Youtuber:show">Více <i class="fa fa-arrow-circle-right"></i></a>
+					</p>
+				</div>
+			</div>
+			<div class="animated flipInY col-md-3 col-sm-6 col-xs-12">
+				<div class="tile-stats">
+					<div class="icon"><i class="fa fa-users"></i></div>
+					<h3>Počet uživatelů</h3>
+					<div class="count">
+						<div class="huge">{$usersCount}</div>
+					</div>
+					<p>
+						<a class="green" href="https://mysql.spolehlive-servery.cz/" target="_blank">phpMyAdmin <i class="fa fa-arrow-circle-right"></i></a>
+					</p>
+				</div>
+			</div>
+			<div class="animated flipInY col-md-3 col-sm-6 col-xs-12">
+				<div class="tile-stats">
+					<div class="icon"><i class="fa fa-comments"></i></div>
+					<h3>Počet komentářů</h3>
+					<div class="count">
+						<div class="huge">{$commentsCount}</div>
+					</div>
+					<p>
+						<a class="green" href="https://mysql.spolehlive-servery.cz/" target="_blank">phpMyAdmin <i class="fa fa-arrow-circle-right"></i></a>
+					</p>
+				</div>
+			</div>
+			<div class="animated flipInY col-md-3 col-sm-6 col-xs-12">
+				<div class="tile-stats">
+					<div class="icon"><i class="fa fa-newspaper-o"></i></div>
+					<h3>Počet článků</h3>
+					<div class="count">
+						<div class="huge">{$articlesCount}</div>
+					</div>
+					<p>
+						<a class="green" n:href="Article:show">Více <i class="fa fa-arrow-circle-right"></i></a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<!-- /top tiles -->
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2><i class="fa fa-bell"></i> Panel oznámení</h2>
+						<div class="clearfix"></div>
+					</div>
+
+					<div class="x_content">
+						<ul>
+							{foreach $notices as $notice}
+							<li class="list-group-item">
+								<i class="fa {$notice->ikona} fa-fw"></i> {$notice->nazev}
+								<span class="pull-right text-muted small"><em>{$notice->datum|date:'d.m.Y'} v {$notice->datum|date:'H:i'}</em></span>
+							</li>
+                            {/foreach}
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /page content -->

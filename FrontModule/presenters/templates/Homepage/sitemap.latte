@@ -1,0 +1,32 @@
+{contentType application/xml}
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{link //Homepage:default}</loc>
+    </url>
+    <url>
+        <loc>{link //Sign:in}</loc>
+    </url>
+    <url>
+        <loc>{link //Sign:up}</loc>
+    </url>
+    <url>
+        <loc>{link //Article:list}</loc>
+    </url>
+    {foreach $siteCategories as $siteCategory}
+    <url>
+        <loc>{link //Category:default $siteCategory->slug}</loc>
+    </url>
+    {/foreach}
+    {foreach $siteYoutubers as $siteYoutuber}
+    <url>
+        <loc>{link //Youtuber:default $siteYoutuber->slug}</loc>
+    </url>
+    {/foreach}
+    {foreach $siteArticles as $siteArticle}
+    <url>
+        <loc>{link //Article:detail $siteArticle->slug}</loc>
+    </url>
+    {/foreach}
+</urlset>

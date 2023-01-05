@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Meta, title, CSS, favicons, etc. -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="WEBROS">
+	<meta name="robots" content="noindex,nofollow">
+
+	<title>Login | W-Admin | DejBod</title>
+
+	<!-- Bootstrap -->
+	<link href="{$basePath}/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link href="{$basePath}/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<!-- Custom Style -->
+	<link href="{$basePath}/css/admin.css" rel="stylesheet">
+
+	<link rel="shortcut icon" href="{$basePath}/images/favicons/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="{$basePath}/images/favicons/favicon.ico" type="image/x-icon">
+</head>
+
+<body class="login">
+    <div class="container">
+        {include content}
+    </div>
+
+	{block scripts}
+        <!-- jQuery -->
+        <script src="{$basePath}/vendors/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="{$basePath}/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+		<!-- Validace formulářů, obsahuje i netteForms.js -->
+		<script src="{$basePath}/js/live-form-validation.js"></script>
+	{/block}
+</body>
+</html>

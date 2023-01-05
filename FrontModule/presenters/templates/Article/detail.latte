@@ -1,0 +1,194 @@
+{block title}{$article->nadpis} - Novinky | Dejbod.cz{/block}
+{block description}{$article->text|striptags|truncate:160}{/block}
+{block css}
+    <!-- social plugin -->
+    <link href="{$basePath}/css/jquery.share.css" rel="stylesheet">
+    {include parent}
+{/block}
+{block head}
+    <!-- Facebook -->
+    <meta property="fb:app_id" 				content="966242223397117" />
+    <meta property="og:locale" 			    content="cs_CZ" />
+    <meta property="og:url"				    content="https://dejbod.cz/novinka/{$article->slug}" />
+    <meta property="og:type"                content="article" />
+    <meta property="og:title"               content="{$article->nadpis}" />
+    <meta property="og:description"         content="{$article->text|striptags|truncate:160}" />
+    <meta property="og:image"               content="https://dejbod.cz/images/{$article->obrazek}" />
+    <meta property="og:site_name" 			content="Dejbod" />
+{/block}
+{block content}
+<div class="container wrapper-nov">
+    <section class="container new-section">
+        <div class="row">
+             <div class="col">
+                 <img class="img-fluid mx-auto" src="{$basePath}/images/{$article->obrazek}" srcset="{$basePath}/images/{$article->obrazek|replace: '.','-small.'} 450w, {$basePath}/images/{$article->obrazek} 720w" sizes="100vw" alt="novinka">
+                 {if $article->slug !== 'o-nas'}
+                    <div class="text-right zdroj">
+                        Zdroj: <cite>youtube.com</cite>
+                    </div>
+                 {/if}
+                 <h1 class="text-center">{$article->nadpis|upper}</h1>
+                 {if $article->slug !== 'o-nas'}
+                    <div id="soc" class="text-center mb-3"></div>
+                 {/if}
+                 <p>{$article->text|noescape|replace: '../..', $basePath}</p>
+                 {if $article->slug !== 'o-nas'}
+                     <p class="datum-nov">{$article->datum|date:'d. m. Y'}</p>
+                     <div class="pt-3 lajkovani d-flex justify-content-start align-items-center">
+                        {if !$user->isLoggedIn()}
+                            <div class="vote_up_done oneLine"></div>
+                            <div class="komHodnoceniNEW oneLine ml-2">{$article->positive}</div>
+                            <div class="vote_down_done oneLine ml-3"></div>
+                            <div class="komHodnoceniNEW oneLine ml-2">{$article->negative}</div>
+                        {elseif $user->isLoggedIn() && $likes}
+                            {if $likes->positive === 1}
+                                <div class="vote_up oneLine" id="voteUp{$article->id}" data-vote="positive-cancel" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                                <div class="komHodnoceniNEW oneLine ml-2" id="positive{$article->id}">{$article->positive}</div>
+                                <div class="vote_down_hollow oneLine ml-3" id="voteDown{$article->id}" data-vote="negative-change" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                                <div class="komHodnoceniNEW oneLine ml-2" id="negative{$article->id}">{$article->negative}</div>
+                            {else}
+                                <div class="vote_up_hollow oneLine" id="voteUp{$article->id}" data-vote="positive-change" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                                <div class="komHodnoceniNEW oneLine ml-2" id="positive{$article->id}">{$article->positive}</div>
+                                <div class="vote_down oneLine ml-3" id="voteDown{$article->id}" data-vote="negative-cancel" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                                <div class="komHodnoceniNEW oneLine ml-2" id="negative{$article->id}">{$article->negative}</div>
+                            {/if}
+                        {else}
+                            <div class="vote_up_hollow oneLine" id="voteUp{$article->id}" data-vote="positive" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                            <div class="komHodnoceniNEW oneLine ml-2" id="positive{$article->id}">{$article->positive}</div>
+                            <div class="vote_down_hollow oneLine ml-3" id="voteDown{$article->id}" data-vote="negative" data-id="{$article->id}" data-url="{link likeArticle!}"></div>
+                            <div class="komHodnoceniNEW oneLine ml-2" id="negative{$article->id}">{$article->negative}</div>
+                        {/if}
+                     </div>
+                 {/if}
+             </div>
+        </div>
+
+        {if (!$user->isLoggedIn())}
+            <div class="row">
+                <div class="col">
+                    <div class="kom-login-bg kom-login-bg-news d-flex flex-column align-items-center">
+                        <div class="kom-login-text">
+                            Pro vložení komentáře se musíš přihlásit.
+                        </div>
+                        <div class="kom-login-btn d-flex justify-content-center align-items-center">
+                            <a n:href="Sign:in" class="btn" role="button" aria-pressed="true">PŘIHLÁSIT SE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {else}
+            <div class="row com-form-vloz">
+                <div class="col d-flex flex-column align-items-center">
+                    <div class="kom-vloz-btn d-flex justify-content-center align-items-center">
+                        <a href="javascript:void(0)" class="btn" id="com-form-vloz" role="button" aria-pressed="true">NAPSAT KOMENTÁŘ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row com-form">
+                <div class="col-12 komentar text-center">
+                    <form n:name="newsCommentForm">
+                        <ul class="flasherrors" n:if="$form->hasErrors()">
+                            <li n:foreach="$form->errors as $error">{$error}</li>
+                        </ul>
+                        <div class="form-group">
+                            <textarea n:name="komentar" class="form-control" id="comment" placeholder="Zde napiš komentář" rows="5"></textarea>
+                        </div>
+                        <input n:name="send" class="btn btn-default">
+                    </form>
+                </div>
+                <div class="com-lista d-flex flex-column flex-sm-row justify-content-between">
+                    <div class="ml-1 ml-sm-4" id="count_message"></div>
+                </div>
+            </div>
+        {/if}
+
+        <div class="row">
+            <div class="col d-flex justify-content-center" id="bannery-hor">
+                <a href="http://www.ellex.cz/zlevnene-zbozi/22320-jbl-charge-3-black-6925281914188.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner4.png"></a>
+                <a href="http://www.ellex.cz/multimedialni-reproduktory/21096-jbl-xtreme-black-6925281904578.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner5.png"></a>
+                <a href="http://www.ellex.cz/zlevnene-zbozi/22320-jbl-charge-3-black-6925281914188.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner6.png"></a>
+            </div>
+        </div>
+
+        <div n:if="$newsComments" class="row">
+            <div n:snippet="moreNewsCom" class="col-12" data-ajax-append="snippets">
+                {foreach $newsComments as $newsComment}
+                    <div class="row d-flex justify-content-sm-start justify-content-md-center align-items-top py-4">
+                        <div class="col-12 mt-2">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex flex-row flex-wrap">
+                                    <div class="komNickYT-Detail py-0 mr-4"><a class="align-middle" n:href="User:default $newsComment->id_uzivatele, $newsComment->ref('db_uzivatele', 'id_uzivatele')->slug">{$newsComment->ref('db_uzivatele', 'id_uzivatele')->nick}</a></div>
+                                    <div><span class="komDatumYT align-middle">{$newsComment->datum|timeAgo}</span></div>
+                                </div>
+                                <div class="komTextYT py-1">{$newsComment->komentar}</div>
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        </div>
+        {snippet moreNewsComButton}
+            <div class="row">
+                <div class="d-flex justify-content-center align-items-center btn-com mx-auto">
+                    {if $newsComments}
+                        <a n:href="moreNewsComments! $offset, $article->id" class="btn ajax" role="button" aria-pressed="true">Další komentáře</a>
+                    {else}
+                        <a class="btn" role="button" aria-pressed="true">Žádné další komentáře</a>
+                    {/if}
+                </div>
+            </div>
+        {/snippet}
+    </section>
+</div>
+<section class="container-fluid preFooter">
+    <div class="container wrapper-nov d-flex justify-content-between align-items-center">
+        <div class="ml-xl-2">
+            {if $next}
+            <a n:href="Article:detail $next->slug" class="btn btn-circle"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></a>
+            {/if}
+        </div>
+        <div class="text-center">
+            <a n:href="Article:list"><img src="{$basePath}/images/vsechnynovinky.svg" alt="všechny novinky"></a>
+            <a n:href="Article:list"><p class="vsechny">Všechny<br>novinky</p></a>
+        </div>
+        <div class="mr-xl-2">
+            {if $previous}
+            <a n:href="Article:detail $previous->slug" class="btn btn-circle"><i class="fa fa-arrow-right fa-lg" aria-hidden="true"></i></a>
+            {/if}
+        </div>
+    </div>
+</section>
+
+{/block}
+
+{block scripts}
+    {include parent}
+    <!-- lajkování novinek -->
+    <script src="{$basePath}/js/like-novinky.js"></script>
+    <!-- social plugin -->
+    <script src="{$basePath}/js/jquery.share.js"></script>
+    <script>
+		/* sdílení článku na FB */
+		$('#soc').share({
+			networks: ['facebook']
+		});
+
+		/* zobrazení formuláře pro odeslání komentáře */
+		$('#com-form-vloz').click(function(e) {
+			$(this).hide();
+			$('.com-form').show();
+			e.preventDefault();
+		});
+
+		$('document').ready(function () {
+			/* countdown u komentářů */
+			var text_max = 1000;
+			$('#count_message').html('Zbývá ' + text_max + ' znaků.');
+			$('#comment').keyup(function() {
+				var text_length = $('#comment').val().length;
+				var text_remaining = text_max - text_length;
+				$('#count_message').html('Zbývá ' + text_remaining + ' znaků.');
+			});
+		});
+    </script>
+{/block}

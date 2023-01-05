@@ -1,0 +1,236 @@
+{block title}Databáze youtuberů | Dejbod.cz{/block}
+{block description}DejBod.cz je největší databáze s hodnocením československých youtuberů. Vyhledej youtubera, podívej se na jeho videa, komentářem sděl ostatním Tvůj názor a oboduj jeho tvorbu. Přečti si novinky, které pro Tebe pravidelně připravuje redakce Dejbod.cz.{/block}
+{block dataLayer}
+    {if ($flashes)}
+        {foreach $flashes as $flash}
+            {if isset ($flash->id) && $flash->id === 'signup-success'}
+                <script>
+                    //Check if dataLayer exist
+                    window.dataLayer = window.dataLayer || [];
+                    //Push generic dataLayer event with registration success value
+                    dataLayer.push({
+                        'event' : 'GAEvent',
+                        'eventCategory' : 'Signup',
+                        'eventAction' : 'Success'
+                    });
+                </script>
+            {/if}
+        {/foreach}
+    {/if}
+{/block}
+{block css}
+    <!-- Owl carousel (měl by být vepředu, aby šel přepsat naším stylem)-->
+    <link href="{$basePath}/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/owl.theme.default.min.css" rel="stylesheet">
+    {include parent}
+{/block}
+{block content}
+    <section n:if="$articles" class="novinkyHP container-fluid">
+        <div class="owl-carousel owl-theme">
+            {foreach $articles as $article}
+                <div class="owl-item">
+                    <a n:href="Article:detail $article->slug">
+                        <div class="post-img">
+                            <div class="precist">PŘEČÍST</div>
+                            <img src="{$basePath}/images/{$article->obrazek}" srcset="{$basePath}/images/{$article->obrazek|replace: '.','-small.'} 450w, {$basePath}/images/{$article->obrazek} 720w" sizes="100vw" alt="novinka">
+                            <div class="post-nadpis">
+                                <h2 class="">{$article->nadpis|upper|truncate:50}</h2>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {/foreach}
+        </div>
+    </section>
+
+    <section class="nadpisHP container-fluid">
+        <div class="row text-center">
+            <div class="col">
+                <h1>DejBod.cz je největší databáze s hodnocením československých youtuberů</h1>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <p>Najdi nového youtubera, zkoukni jeho tvorbu, staň se kritikem a zůstaň v obraze díky novinkám</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tabulkaHP container">
+        <div class="row text-center">
+            <div class="col">
+                <h2>Žebříček nejlepších autorů za minulý {$dateTableYt}</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="tabulka-grid">
+                {foreach $youtubersLastMonth as $youtuber}
+                    {if $iterator->getCounter() == 1}
+                        <a n:href="Youtuber:default $youtuber->slug">
+                            <div class="umisteni-prvni">
+                                <img class="fotoHP img-fluid" src="{$youtuber->foto|replace:'s240', 's480'}" alt="fotka">
+                                <div class="row align-items-center youtuberHP-popis">
+                                    <div class="poradiHP poradiHP1 col">{$iterator->getCounter()}</div>
+                                    <div class="udajeHP udajeHP1 col-10 col-sm-11 d-flex flex-column justify-content-center">
+                                        <div class="jmenoHP text-left px-0">{$youtuber->jmeno|truncate:15}</div>
+                                        <div class="row mx-0 justify-content-between">
+                                            <div class="hodnoceniHP align-self-end">{$youtuber->hodnoceni|number:1} rating</div>
+                                            <div><img class="starsHP" src="{$basePath}/images/{$youtuber->hodnoceni|number}stars.svg" alt="stars"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hlasovatHP">
+                                    HLASOVAT TEĎ
+                                </div>
+                            </div>
+                        </a>
+                    {elseif $iterator->getCounter() == 2}
+                        <a n:href="Youtuber:default $youtuber->slug">
+                            <div class="umisteni-dalsi">
+                                <img class="fotoHP" src="{$youtuber->foto}" alt="fotka">
+                                <div class="row align-items-center youtuberHP-popis">
+                                    <div class="poradiHP poradiHP2 col">{$iterator->getCounter()}</div>
+                                    <div class="udajeHP udajeHP2 col-10 d-flex flex-column justify-content-center">
+                                        <div class="jmenoHP text-left px-0">{$youtuber->jmeno|truncate:15}</div>
+                                        <div class="row mx-0 justify-content-between">
+                                            <div class="hodnoceniHP align-self-end">{$youtuber->hodnoceni|number:1} rating</div>
+                                            <div><img class="starsHP" src="{$basePath}/images/{$youtuber->hodnoceni|number}stars.svg" alt="stars"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hlasovatHP">
+                                    HLASOVAT TEĎ
+                                </div>
+                            </div>
+                        </a>
+                    {elseif $iterator->getCounter() == 3}
+                        <a n:href="Youtuber:default $youtuber->slug">
+                            <div class="umisteni-dalsi">
+                                <img class="fotoHP" src="{$youtuber->foto}" alt="fotka">
+                                <div class="row align-items-center youtuberHP-popis">
+                                    <div class="poradiHP poradiHP3 col">{$iterator->getCounter()}</div>
+                                    <div class="udajeHP udajeHP3 col-10 d-flex flex-column justify-content-center">
+                                        <div class="jmenoHP text-left px-0">{$youtuber->jmeno|truncate:15}</div>
+                                        <div class="row mx-0 justify-content-between">
+                                            <div class="hodnoceniHP align-self-end">{$youtuber->hodnoceni|number:1} rating</div>
+                                            <div><img class="starsHP" src="{$basePath}/images/{$youtuber->hodnoceni|number}stars.svg" alt="stars"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hlasovatHP">
+                                    HLASOVAT TEĎ
+                                </div>
+                            </div>
+                        </a>
+                    {else}
+                        <a n:href="Youtuber:default $youtuber->slug">
+                            <div class="umisteni-dalsi">
+                                <img class="fotoHP" src="{$youtuber->foto}" alt="fotka">
+                                <div class="row align-items-center youtuberHP-popis">
+                                    <div class="poradiHP col">{$iterator->getCounter()}</div>
+                                    <div class="udajeHP col-10 d-flex flex-column justify-content-center">
+                                        <div class="jmenoHP text-left px-0">{$youtuber->jmeno|truncate:18}</div>
+                                        <div class="row mx-0 justify-content-between">
+                                            <div class="hodnoceniHP align-self-end">{$youtuber->hodnoceni|number:1} rating</div>
+                                            <div><img class="starsHP" src="{$basePath}/images/{$youtuber->hodnoceni|number}stars.svg" alt="stars"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hlasovatHP">
+                                    HLASOVAT TEĎ
+                                </div>
+                            </div>
+                        </a>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <div class="col text-center mt-5 mb-2">
+                <a href="https://www.lg-store.cz/oled-tv/480-lg-55eg9a7v-8806084865335.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner1.jpg" alt="banner"></a>
+            </div>
+        </div>
+    </div>
+
+    <section n:if="$comments" class="komentareHP container">
+        <div class="row justify-content-center text-center">
+            <h2>Žebříček nejlepších komentářů</h2>
+        </div>
+        {foreach $comments as $comment}
+            <div class="row d-flex justify-content-sm-start justify-content-md-center align-items-top py-3">
+                <div class="komPoradiHP komPoradiHP{$iterator->getCounter()} col-2 col-sm-auto mt-4">
+                    {$iterator->getCounter()}.
+                </div>
+                <div class="col-10 col-sm-auto mt-3">
+                    <a class="komentHP" n:href="Youtuber:default $comment->slug"><img class="rounded-circle" src="{$comment->foto|replace: 's240', 's62'}" alt="fotka"></a>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <div class="d-flex flex-column">
+                        <div class="komNickHP py-0"><a n:href="User:default $comment->id_uzivatele, $comment->userSlug">{$comment->nick}</a><span class="komDatumHP">{$comment->datum|timeAgo}</span></div>
+                        <div class="komTextHP py-1"><a class="komentHP" n:href="Youtuber:default $comment->slug">{$comment->komentar|truncate:100}</a></div>
+                        <div class="pt-2"><span class="komHodnoceniHP">{$comment->hodnoceni > 0 ? '+' . $comment->hodnoceni : $comment->hodnoceni}</span></div>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </section>
+
+    <div class="container mb-2">
+        <div class="row">
+            <div class="col text-center mt-0 mb-5">
+                <a href="https://www.lg-store.cz/54-oled-tv" target="_blank">
+                    <div class="carousel slide carousel-fade" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="img-fluid" src="{$basePath}/images/banner2.jpg" alt="banner">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="img-fluid" src="{$basePath}/images/banner3.jpg" alt="banner">
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{/block}
+
+{block scripts}
+{include parent}
+    <!-- Owl carousel -->
+    <script src="{$basePath}/js/owl.carousel.min.js"></script>
+    <script>
+		$('document').ready(function () {
+
+			/* carousel s novinkama*/
+			$('.owl-carousel').owlCarousel({
+				loop:true,
+				margin:20,
+                dots:true,
+				dotsEach:true,
+				responsiveClass:true,
+				responsive:{
+					0:{
+						items:1,
+					},
+					540:{
+						items:2,
+					},
+					992:{
+						items:3,
+					},
+					1921:{
+						items:4,
+					}
+				},
+				autoplay: true,
+				autoplayTimeout: 4000,
+				autoplaySpeed: 2000
+			});
+		});
+    </script>
+{/block}

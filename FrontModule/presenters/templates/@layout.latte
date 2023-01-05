@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {ifset description}<meta name="description" content="{include description|stripHtml}">{/ifset}
+	<meta name="author" content="Webros">
+
+	<title>{ifset title}{include title|stripHtml}{/ifset}</title>
+
+    {block dataLayer}{/block}
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P38M8ZD');</script>
+	<!-- End Google Tag Manager -->
+
+	<!-- Favicons -->
+	<link rel="apple-touch-icon" sizes="57x57" href="{$basePath}/images/favicons/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="{$basePath}/images/favicons/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="{$basePath}/images/favicons/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="{$basePath}/images/favicons/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="{$basePath}/images/favicons/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="{$basePath}/images/favicons/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="{$basePath}/images/favicons/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="{$basePath}/images/favicons/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="{$basePath}/images/favicons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="{$basePath}/images/favicons/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="{$basePath}/images/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="{$basePath}/images/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="{$basePath}/images/favicons/favicon-16x16.png">
+	<link rel="manifest" href="{$basePath}/images/favicons/manifest.json">
+
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
+	<!-- Google Web Font Embed -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&amp;subset=latin-ext" rel="stylesheet">
+
+    {block css}
+	<!-- Bootstrap -->
+	<link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link href="{$basePath}/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<!-- jQuery UI - potřebné pro autocomplete -->
+	<link href="{$basePath}/css/jquery-ui.min.css" rel="stylesheet">
+	<!-- Custom Theme Style -->
+	<link href="{='css/custom.css'|asset}" rel="stylesheet">
+    {/block}
+    {block head}{/block}
+</head>
+
+<body class="{$bodyClass}">
+<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P38M8ZD"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top" id="menu">
+		<a class="navbar-brand" n:href="Homepage:"><img src="{$basePath}/images/logo.svg" alt="logo"></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" n:href="Article:list"><span>Novinky</span></a>
+				</li>
+				<li class="nav-item search">
+					<form n:name="searchYoutuberForm" class="form-inline form-search" data-url="{link autocomplete}" autocomplete="off">
+						<input n:name="youtuberi" class="form-control input-search" placeholder="Vyhledat youtubera">
+						<input n:name="search" class="btn search-submit">
+					</form>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Vyber kategorii</span></a>
+					<div class="dropdown-menu" aria-labelledby="dropdown01">
+						{foreach $baseCategories as $baseCategory}
+						<a class="dropdown-item" n:href="Category:default $baseCategory->slug">{$baseCategory->nazev}</a>
+						{/foreach}
+					</div>
+				</li>
+			</ul>
+			<ul class="navbar-nav">
+				{if (!$user->isLoggedIn())}
+				<li class="nav-item">
+					<a class="nav-link" n:href="Sign:up"><span><em class="hide-md">Chceš hodnotit?</em><em class="semibold"> Registrovat</em></span></a>
+				</li>
+				<li class="nav-item prihlaseni">
+					<a class="nav-link" n:href="Sign:in"><span class="semibold">Přihlásit se</span></a>
+				</li>
+				{else}
+				<li class="nav-item">
+					<span class="semibold nav-link"><a n:href="User:default $user->getIdentity()->id, $user->getIdentity()->slug">{$user->getIdentity()->roles['user']}</a></span>
+				</li>
+				<li class="nav-item prihlaseni">
+					<a class="nav-link" n:href="Sign:out"><span class="semibold">Odhlásit se</span></a>
+				</li>
+				{/if}
+			</ul>
+		</div>
+	</nav>
+
+	<div n:if="$flashes" n:foreach="$flashes as $flash" n:class="alert, $flash->type, alert-dismissible, fade, show">
+		{if isset ($flash->id) && $flash->id === 'signup-success'}
+			<span class="text" id="{$flash->id}">{$flash->message}</span>
+		{else}
+			<span class="text">{$flash->message}</span>
+		{/if}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	{include content}
+
+    <footer class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
+		<div class="odkazy-text col-md-4 order-2 order-md-1 text-left pl-lg-5 my-4 my-md-0">
+			<ul class="d-flex flex-column align-items-center align-items-md-start mb-0 my-md-3 list-unstyled">
+				<li><a class="navbar-brand" n:href="Homepage:"><img src="{$basePath}/images/logo-footer.svg" alt="logo"></a></li>
+				<li><a href="{$basePath}/pdf/smluvni-podminky.pdf" target="_blank">SMLUVNÍ PODMÍNKY</a></li>
+				<li><a n:href="Doc:privacy">ZÁSADY OCHRANY OSOBNÍCH ÚDAJŮ</a></li>
+				<li><a n:href="Doc:rights">POUČENÍ O PRÁVECH</a></li>
+				<li><a n:href="Article:detail o-nas">O NÁS</a></li>
+				<li><a n:href="Article:list">NOVINKY</a></li>
+				<li>DEJBOD © 2017 INTELACT S.R.O.</li>
+				<li>CREATED BY <a href="https://webros.cz" target="_blank">WEBROS.CZ</a></li>
+				<li><a href="https://goo.gl/forms/35E8FltiRHLgPn903" target="_blank">TIP NA YOUTUBERA</a></li>
+			</ul>
+		</div>
+		<div class="ikony-fx col-md-4 order-1 order-md-2 text-center px-md-0 mt-4 mt-md-0">
+			<ul class="d-flex justify-content-center align-items-center list-unstyled mb-0 list-inline">
+				<li class="vyvez text-center"><img src="{$basePath}/images/back-to-top.svg" alt="nahoru"></li>
+				<li class="zpet text-center"><a n:href="Homepage:"><img src="{$basePath}/images/home.svg" alt="home"></a></li>
+			</ul>
+		</div>
+		<div class="odkazy-site col-md-4 order-3 order-md-3 pr-lg-5 mb-3 mb-md-0">
+			<ul class="d-flex justify-content-center justify-content-md-end align-items-center mb-0 list-unstyled list-inline">
+				<li class="list-inline-item"><img src="{$basePath}/images/soc1.svg" alt="soc"></li>
+				<li class="list-inline-item"><a href="https://www.instagram.com/dej_bod"><img src="{$basePath}/images/soc2.svg" alt="soc"></a></li>
+				<li class="list-inline-item"><a href="https://www.facebook.com/DejBod-1352104671494986"><img src="{$basePath}/images/soc3.svg" alt="soc"></a></li>
+			</ul>
+		</div>
+    </footer>
+
+	<div class="container-fluid eu-cookies" n:if="empty($_COOKIE[eu-cookies])">
+		<div class="row">
+			<div class="col-md-10 align-self-center">Procházením našich stránek potvrzujete, že jste se seznámili s tím, co <a n:href="Doc:cookies">cookies</a> jsou, jak je můžete odmítnout, a jak <a n:href="Doc:privacy">zpracováváme osobní údaje</a>.</div>
+			<div class="col-md-2 text-md-right mt-2 mt-md-0"><button class="">Souhlasím</button></div>
+		</div>
+	</div>
+	<noscript><style>.eu-cookies { display:none }</style></noscript>
+
+	{block scripts}
+	<!-- jQuery -->
+	<script src="{$basePath}/js/jquery.min.js"></script>
+	<!-- potřebný pro bootstrap -->
+	<script src="{$basePath}/js/popper.min.js"></script>
+	<!-- Bootstrap -->
+	<script src="{$basePath}/js/bootstrap.min.js"></script>
+	<!-- jQuery UI - potřebné pro autocomplete -->
+	<script src="{$basePath}/js/jquery-ui.min.js"></script>
+	<!-- Nette Ajax -->
+	<script src="{$basePath}/js/nette.ajax.js"></script>
+	<!-- Nette Forms -->
+	<script src="{$basePath}/js/netteForms.min.js"></script>
+	<!-- live validace -->
+	<script src="{$basePath}/js/live-validation.js"></script>
+	<!-- custom scripts -->
+	<script src="{='js/custom.js'|asset}"></script>
+	{/block}
+</body>
+</html>

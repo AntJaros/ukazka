@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Meta, title, CSS, favicons, etc. -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="WEBROS">
+	<meta name="robots" content="noindex,nofollow">
+
+	<title>{ifset title}{include title|stripHtml} | {/ifset}W-Admin | DejBod</title>
+
+    {block styles}
+        <!-- Google Web Font Embed -->
+        <link href='https://fonts.googleapis.com/css?family=Roboto:900,700,300,400,100&subset=latin-ext' rel='stylesheet' type='text/css'>
+        <!-- Bootstrap -->
+        <link href="{$basePath}/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="{$basePath}/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Summernote (wysiwyg editor) -->
+        <link href="{$basePath}/vendors/summernote/dist/summernote.css" rel="stylesheet">
+        <!-- Custom Style -->
+        <link href="{$basePath}/css/admin.css" rel="stylesheet">
+    {/block}
+
+        <link rel="shortcut icon" href="{$basePath}/images/favicons/favicon.ico" type="image/x-icon">
+</head>
+
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title">
+                        <a class="site_title" n:href="Homepage:default"><img src="{$basePath}/images/admin/logo.png" alt="w-admin">
+                        </a>
+                    </div>
+
+                    <br><br><br>
+
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a n:href="Homepage:default"><i class="fa fa-dashboard"></i> Nástěnka</a>
+                                </li>
+                                <li><a><i class="fa fa-video-camera"></i> Youtubeři <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li n:if="$user->isAllowed('Youtuber', 'insert')"><a n:href="Youtuber:create"> Vložit youtubera</a></li>
+                                        <li><a n:href="Youtuber:show"> Seznam youtuberů</a></li>
+                                    </ul>
+                                </li>
+                                <li n:if="$user->isAllowed('Category')"><a><i class="fa fa-bars"></i> Kategorie <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a n:href="Category:create"> Vložit kategorii</a></li>
+                                        <li><a n:href="Category:show"> Seznam kategorií</a></li>
+                                    </ul>
+                                </li>
+                                <li n:if="$user->isAllowed('Article')"><a><i class="fa fa-newspaper-o"></i> Novinky <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a n:href="Article:create"> Vložit novinku</a></li>
+                                        <li><a n:href="Article:show"> Seznam novinek</a></li>
+                                    </ul>
+                                </li>
+                                <li n:if="$user->isAllowed('Tablehp')">
+                                    <a n:href="Tablehp:conf"><i class="fa fa-table"></i> Tabulka na HP</a>
+                                </li>
+                               {*<li n:if="$user->isAllowed('Update')">
+                                    <a n:href="Update:"><i class="fa fa-refresh"></i> Update youtuberů</a>
+                                </li>*}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    {$user->getIdentity()->data['adminuser']}
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li n:if="$user->isAllowed('Backend')"><a n:href="User:new"><i class="fa fa-user-plus pull-right"></i> Nový uživatel</a></li>
+                                    <li><a n:href="User:name"><i class="fa fa-exchange pull-right"></i> Změna jména</a></li>
+                                    <li><a n:href="User:password"><i class="fa fa-exchange pull-right"></i> Změna hesla</a></li>
+                                    <li><a n:href="Sign:out"><i class="fa fa-sign-out pull-right"></i> Odhlásit</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+
+            {include content}
+
+        </div>
+        <!-- footer content -->
+        <footer>
+            <div class="pull-right">
+                Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>, powered by <a href="https://webros.cz"><img src="{$basePath}/images/admin/webros_podpis.gif" alt="webros"></a>
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+    </div>
+
+
+	{block scripts}
+        <!-- jQuery -->
+        <script src="{$basePath}/vendors/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="{$basePath}/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Nette Ajax -->
+        <script src="{$basePath}/js/nette.ajax.js"></script>
+        <!-- Validace formulářů, obsahuje i netteForms.js -->
+        <script src="{$basePath}/js/live-form-validation.js"></script>
+        <!-- Summernote (wysiwyg editor) -->
+        <script src="{$basePath}/vendors/summernote/dist/summernote.js"></script>
+        <script src="{$basePath}/vendors/summernote/dist/lang/summernote-cs-CZ.js"></script>
+        <!-- Custom Scripts -->
+        <script src="{$basePath}/js/admin.js"></script>
+	{/block}
+</body>
+</html>

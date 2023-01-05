@@ -1,0 +1,46 @@
+{import '../messages.latte'}
+
+{block content}
+    <div class="right_col" role="main">
+        {include messages}
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="page-header">Editace youtubera</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form n:name="youtuberEditForm">
+                    <hr>
+                    <ul class="flasherrors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+                    <div class="form-group">
+                        <label n:name="kategorie">KATEGORIE (zaškrtněne 1-3 políčka)</label>
+                        {foreach $form['kategorie']->items as $row}
+                            <div class="checkbox">
+                                <label><input type="checkbox" n:name="kategorie:$row->id">{$row->nazev}</label>
+                            </div>
+                        {/foreach}
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label n:name="jmeno">JMÉNO</label>
+                        <input n:name="jmeno" class="form-control" autofocus>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label n:name="url_vlastni">URL SOUKROMÁ (vč. http(s)://) (nepovinné pole)</label>
+                        <input n:name="url_vlastni" class="form-control">
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label n:name="popis">POPIS</label>
+                        <textarea n:name="popis" id="summernote" class="form-control"></textarea>
+                    </div>
+                    <hr>
+                    <input n:name="send" class="btn btn-default">
+                </form>
+            </div>
+        </div>
+    </div>

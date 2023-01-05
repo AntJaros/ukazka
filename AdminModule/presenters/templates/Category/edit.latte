@@ -1,0 +1,37 @@
+{import '../messages.latte'}
+
+{block content}
+<div class="right_col" role="main">
+    {include messages}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">Editace kategorie</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form n:name="categoryEditForm">
+                <hr>
+                <ul class="flasherrors" n:if="$form->hasErrors()">
+                    <li n:foreach="$form->errors as $error">{$error}</li>
+                </ul>
+                <div class="form-group">
+                    <label n:name="nazev">NÁZEV:</label>
+                    <input n:name="nazev" class="form-control" maxlength="45" autofocus>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label n:name="obrazek">OBRÁZEK (JPEG, 1920x400px, max 500kB)</label>
+                    <input n:name="obrazek" class="form-control">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label n:name="popis">POPIS:</label>
+                    <textarea n:name="popis" class="form-control" rows="3"></textarea>
+                </div>
+                <hr>
+                <input n:name="send" class="btn btn-default">
+            </form>
+        </div>
+    </div>
+</div>

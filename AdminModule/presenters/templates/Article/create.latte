@@ -1,0 +1,42 @@
+{import '../messages.latte'}
+
+{block content}
+<div class="right_col" role="main">
+    {include messages}
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">Nový článek</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="articleForm" n:name="articleCreateForm" data-url="{link uploadImage!}">
+                <hr>
+                <ul class="flasherrors" n:if="$form->hasErrors()">
+                    <li n:foreach="$form->errors as $error">{$error}</li>
+                </ul>
+                <div class="form-group">
+                    <label n:name="nadpis">NADPIS</label>
+                    <input n:name="nadpis" class="form-control" maxlength="100" autofocus>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label n:name="youtuberi">ID YOUTUBERŮ (čísla oddělené čárkou bez mezer, např. "5,18,253")</label>
+                    <input n:name="youtuberi" class="form-control">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label n:name="hl_obr">HLAVNÍ OBRÁZEK (720x377px, max 2MB)</label>
+                    <input n:name="hl_obr" class="form-control">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label n:name="text">TEXT</label>
+                    <textarea n:name="text" id="summernote2" class="form-control"></textarea>
+                </div>
+                <hr>
+                <input n:name="send" class="btn btn-default">
+            </form>
+        </div>
+    </div>
+</div>

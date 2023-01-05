@@ -1,0 +1,327 @@
+{block title}{$youtuber->jmeno} | Dejbod.cz{/block}
+{block description}{$youtuber->popis|striptags|truncate:160}{/block}
+{block content}
+    <header class="container yt-header">
+        <div class="row mx-auto">
+			<div class="col-md-6 col-xl-5 offset-xl-1 yt-obr">
+				<img class="profil-foto mx-auto img-fluid" src="{$youtuber->foto|replace:'s240', 's480'}" alt="foto">
+			</div>
+			<div class="col-md-6 col-xl-5 yt-prof mt-5 mt-md-0">
+				<h1>{$youtuber->jmeno}</h1>
+                {snippet rating}
+					<div id="rating_{$youtuber->id}" class="ratings">
+						{foreach $stars as $star}
+							{$star|noescape}
+						{/foreach}
+						<span class="rating">{$rating->hodnoceni|number:1} rating</span>
+					</div>
+					<p class="bodovano mb-0">Bodováno {$rating->pocet}x</p>
+					<p class="bodovano mb-5 mb-md-3 mb-lg-5">
+                        {if !$user->isLoggedIn()}
+							Pro hodnocení se musíš <a n:href="Sign:in">přihlásit!</a>
+                        {elseif $user->isLoggedIn() && $monthRated}
+							Hodnotit můžeš 1x za měsíc!
+                        {else}
+							Nyní můžeš youtubera ohodnotit!
+                        {/if}
+					</p>
+                {/snippet}
+				<ul class="list-inline">
+					<li class="list-inline-item">KATEGORIE:</li>
+					{foreach $catYoutuber as $cat}
+						<li class="list-inline-item"><a n:href="Category:default $cat->slug">{$cat->nazev|upper}</a></li>
+					{/foreach}
+				</ul>
+				<p class="info-zh">{$youtuber->zhlednuti|number:0:',':' '} zhlednutí na Youtubu</p>
+				<p class="info-od">{$youtuber->odberatele|number:0:',':' '} odběratelů</p>
+				{if $youtuber->url_vlastni}
+				<p class="yt-url"><a href="{$youtuber->url_vlastni}" target="_blank"><img src="{$basePath}/images/yt-url1.svg" alt="url">{$youtuber->url_vlastni}</a></p>
+				{/if}
+				<p class="yt-url"><a href="https://youtube.com/channel/{$youtuber->channel}" target="_blank"><img src="{$basePath}/images/yt-url2.svg" alt="url">youtube.com/{$youtuber->slug}</a></p>
+			</div>
+		</div>
+    </header>
+
+	<section n:if="$videos" class="container yt-videa">
+		<div class="row">
+			<div class="col col-xl-5 offset-xl-1">
+				<h2>VIDEA</h2>
+			</div>
+			<div class="col col-xl-5 mr-4 text-right">
+				<div class="dropdown show">
+					<a class="dropdown-toggle sort-toggle" href="#" role="button" id="dropdownSortVideo" data-toggle="dropdown" data-offset="0px, -50px" aria-haspopup="true" aria-expanded="false">
+						ŘADIT DLE
+					</a>
+					<div class="dropdown-menu sort-menu" aria-labelledby="dropdownSortVideo">
+						<h6 class="dropdown-header sort-header">ŘADIT DLE</h6>
+						<a class="dropdown-item sort-item ajax" n:href="sortVideos! 0, $youtuber->id, $youtuber->channel">NEJNOVĚJŠÍCH</a>
+						<a class="dropdown-item sort-item ajax" n:href="sortVideos! 1, $youtuber->id, $youtuber->channel">NEJLEPŠÍCH</a>
+					</div>
+				</div>
+			</div>
+		</div>
+        {snippet sortVideos}
+		<div class="row">
+			<div class="vid col-xl-10 offset-xl-1">
+				<ul class="list-videa list-unstyled">
+					{foreach $videos as $video}
+						{if $newVideos}
+							<li><a id="{$video['snippet']['resourceId']['videoId']}" class="watch" href="#video"><i class="fa fa-youtube-play fa-lg" aria-hidden="true"></i>{$video['snippet']['title']}</a></li>
+						{else}
+							<li><a id="{$video->id_video}" class="watch" href="#video"><i class="fa fa-youtube-play fa-lg" aria-hidden="true"></i>{$video->titulek}</a></li>
+						{/if}
+					{/foreach}
+				</ul>
+			</div>
+		</div>
+		{/snippet}
+		<div class="row embed-vid">
+			<div class="col-xl-10 offset-xl-1 embed-responsive embed-responsive-16by9" id="video"><iframe id="nahrazeni"></iframe></div>
+		</div>
+	</section>
+
+	<section class="container yt-popis">
+		<div class="row">
+			<div class="col-xl-10 offset-xl-1">
+				<h2>POPIS YOUTUBERA</h2>
+				{$youtuber->popis|noescape}
+			</div>
+		</div>
+	</section>
+
+	<section n:if="$youtuberArticles" class="container yt-popis">
+		<div class="row">
+			<div class="col-xl-10 offset-xl-1">
+				<h2>ČLÁNKY</h2>
+				<ul class="pl-3">
+				{foreach $youtuberArticles as $youtuberArticle}
+					<li><a n:href="Article:detail $youtuberArticle->ref('db_novinky', 'id_novinky')->slug">{$youtuberArticle->ref('db_novinky', 'id_novinky')->nadpis}</a></li>
+                {/foreach}
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="container yt-komentare">
+		<div class="row">
+			<div class="col col-xl-5 offset-xl-1">
+				<h2>KOMENTÁŘE</h2>
+			</div>
+			<div class="col col-xl-5 mr-4 text-right">
+				<div class="dropdown show">
+					<a class="dropdown-toggle sort-toggle" href="#" role="button" id="dropdownSortCom" data-toggle="dropdown" data-offset="0px, -100px" aria-haspopup="true" aria-expanded="false">
+						ŘADIT DLE
+					</a>
+					<div class="dropdown-menu sort-menu" aria-labelledby="dropdownSortCom">
+						<h6 class="dropdown-header sort-header">ŘADIT DLE</h6>
+						<a class="dropdown-item sort-item ajax" n:href="sortComments! 0, $youtuber->id">NEJNOVĚJŠÍCH</a>
+						<a class="dropdown-item sort-item ajax" n:href="sortComments! 1, $youtuber->id">NEJSTARŠÍCH</a>
+						<a class="dropdown-item sort-item ajax" n:href="sortComments! 2, $youtuber->id">NEJLEPŠÍCH</a>
+						<a class="dropdown-item sort-item ajax" n:href="sortComments! 3, $youtuber->id">NEJHORŠÍCH</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{if (!$user->isLoggedIn())}
+		<div class="row">
+			<div class="col-xl-10 offset-xl-1">
+				<div class="kom-login-bg d-flex flex-column align-items-center">
+					<div class="kom-login-text">
+						Pro vložení komentáře se musíš přihlásit.
+					</div>
+					<div class="kom-login-btn d-flex justify-content-center align-items-center">
+						<a n:href="Sign:in" class="btn" role="button" aria-pressed="true">PŘIHLÁSIT SE</a>
+					</div>
+				</div>
+			</div>
+		</div>
+        {elseif !$monthCom && !$monthRated}
+			<div class="row">
+				<div class="col-xl-10 offset-xl-1">
+					<div class="kom-login-bg d-flex flex-column align-items-center">
+						<div class="kom-rate-text">
+							Pro vložení komentáře musíš nejprve youtubera ohodnotit.
+						</div>
+					</div>
+				</div>
+			</div>
+        {elseif !$monthCom && $monthRated}
+		<div class="row com-form-vloz">
+			<div class="col-xl-10 offset-xl-1 d-flex flex-column align-items-center">
+				<div class="kom-vloz-btn d-flex justify-content-center align-items-center">
+					<a href="javascript:void(0)" class="btn" id="com-form-vloz" role="button" aria-pressed="true">NAPSAT KOMENTÁŘ</a>
+				</div>
+			</div>
+		</div>
+		<div class="row com-form">
+			<div class="col-xl-10 offset-xl-1 komentar text-center">
+				<form n:name="prepareCommentForm">
+					<ul class="flasherrors" n:if="$form->hasErrors()">
+						<li n:foreach="$form->errors as $error">{$error}</li>
+					</ul>
+					<div class="form-group">
+						<textarea n:name="komentar" class="form-control" id="comment" placeholder="Zde napiš komentář" rows="5"></textarea>
+					</div>
+					<input n:name="send" id="submitBtn" class="btn btn-default" data-toggle="modal" data-target="#confirm-submit">
+				</form>
+			</div>
+			<div class="col-xl-10 offset-xl-1">
+				<div class="com-lista d-flex flex-column flex-sm-row justify-content-between">
+					<div class="ml-1 ml-sm-4" id="count_message"></div>
+					<div class="ml-1 mr-sm-4">Další komentář můžeš napsat za měsíc.</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- modální okno pro potvrzení odeslání komentáře -->
+		<div class="modal fade modal-com" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						Odeslat tento komentář?
+					</div>
+					<form n:name="writeCommentForm">
+						<div class="modal-body">
+							<ul class="flasherrors" n:if="$form->hasErrors()">
+								<li n:foreach="$form->errors as $error">{$error}</li>
+							</ul>
+							<div class="form-group">
+								<label n:name="komentar">Tvůj komentář:</label>
+								<textarea n:name="komentar" class="form-control" id="com" rows="5" maxlength="1500"></textarea>
+								<p class="pull-right" id="count_message"></p>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn modal-zrusit" data-dismiss="modal">Zrušit</button>
+							<input n:name="send" id="submitBtn" class="btn modal-odeslat" data-toggle="modal" data-target="#confirm-submit">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		{/if}
+
+		<div class="row">
+			<div class="col d-flex justify-content-center" id="bannery-hor">
+				<a href="http://www.ellex.cz/zlevnene-zbozi/22320-jbl-charge-3-black-6925281914188.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner4.png"></a>
+				<a href="http://www.ellex.cz/multimedialni-reproduktory/21096-jbl-xtreme-black-6925281904578.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner5.png"></a>
+				<a href="http://www.ellex.cz/zlevnene-zbozi/22320-jbl-charge-3-black-6925281914188.html" target="_blank"><img class="img-fluid" src="{$basePath}/images/banner6.png"></a>
+			</div>
+		</div>
+
+        {snippet sortCom}
+			<div n:if="$comments" class="row">
+				<div n:snippet="moreCom" class="col-xl-10 offset-xl-1" data-ajax-append="snippets">
+					{foreach $comments as $comment}
+						<div class="row d-flex justify-content-sm-start justify-content-md-center align-items-top py-4">
+							<div class="col-12 mt-2">
+								<div class="d-flex flex-column">
+									<div class="d-flex flex-row flex-wrap">
+										<div class="komNickYT-Detail py-0"><a class="align-middle" n:href="User:default $comment->id_uzivatele, $comment->userSlug">{$comment->nick}</a></div>
+										<div><img src="{$basePath}/images/{$comment->rating}stars-blue.svg" class="align-middle ml-3 mr-5" alt="stars"></div>
+										<div><span class="komDatumYT align-middle">{$comment->datum|timeAgo}</span></div>
+									</div>
+									<div class="komTextYT py-1">{$comment->komentar}</div>
+									<div class="pt-3 lajkovani d-flex justify-content-start align-items-center">
+										{if !$user->isLoggedIn()}
+											<div class="vote_up_done oneLine"></div>
+											<div class="komHodnoceniYT oneLine ml-2">{$comment->positive}</div>
+											<div class="vote_down_done oneLine ml-3"></div>
+											<div class="komHodnoceniYT oneLine ml-2">{$comment->negative}</div>
+										{elseif $user->isLoggedIn() && array_key_exists($comment->id, $likes)}
+											{if $likes[$comment->id] === 1}
+												<div class="vote_up oneLine" id="voteUp{$comment->id}" data-vote="positive-cancel" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+												<div class="komHodnoceniYT oneLine ml-2" id="positive{$comment->id}">{$comment->positive}</div>
+												<div class="vote_down_hollow oneLine ml-3" id="voteDown{$comment->id}" data-vote="negative-change" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+												<div class="komHodnoceniYT oneLine ml-2" id="negative{$comment->id}">{$comment->negative}</div>
+                                            {else}
+												<div class="vote_up_hollow oneLine" id="voteUp{$comment->id}" data-vote="positive-change" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+												<div class="komHodnoceniYT oneLine ml-2" id="positive{$comment->id}">{$comment->positive}</div>
+												<div class="vote_down oneLine ml-3" id="voteDown{$comment->id}" data-vote="negative-cancel" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+												<div class="komHodnoceniYT oneLine ml-2" id="negative{$comment->id}">{$comment->negative}</div>
+                                            {/if}
+										{else}
+											<div class="vote_up_hollow oneLine" id="voteUp{$comment->id}" data-vote="positive" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+											<div class="komHodnoceniYT oneLine ml-2" id="positive{$comment->id}">{$comment->positive}</div>
+											<div class="vote_down_hollow oneLine ml-3" id="voteDown{$comment->id}" data-vote="negative" data-id="{$comment->id}" data-url="{link likeComment!}"></div>
+											<div class="komHodnoceniYT oneLine ml-2" id="negative{$comment->id}">{$comment->negative}</div>
+										{/if}
+									</div>
+								</div>
+							</div>
+						</div>
+					{/foreach}
+				</div>
+			</div>
+			{snippet moreComButton}
+			<div class="row">
+				<div class="d-flex justify-content-center align-items-center btn-com mx-auto">
+				{if $comments}
+					<a n:href="moreComments! $offset, $youtuber->id, $sortCom" class="btn ajax" role="button" aria-pressed="true">Další komentáře</a>
+				{else}
+					<a class="btn" role="button" aria-pressed="true">Žádné další komentáře</a>
+				{/if}
+				</div>
+			</div>
+			{/snippet}
+        {/snippet}
+	</section>
+{/block}
+
+{block scripts}
+	{include parent}
+
+    <!-- lajkování komentářů -->
+    <script src="{$basePath}/js/like-komentare.js"></script>
+
+    <script>
+		$('document').ready(function () {
+			/* countdown u komentářů */
+			var text_max = 1500;
+			$('#count_message').html('Zbývá ' + text_max + ' znaků.');
+			$('#comment').keyup(function() {
+				var text_length = $('#comment').val().length;
+				var text_remaining = text_max - text_length;
+				$('#count_message').html('Zbývá ' + text_remaining + ' znaků.');
+			});
+
+			/* potvrzení odeslání komentáře */
+			$('#submitBtn').click(function(e) {
+				e.preventDefault();
+				$('#com').text($('#comment').val());
+			});
+		});
+
+		/* rating youtuberů */
+		$('.ratings_stars').on('mouseover', function() {
+			$(this).prevAll().addBack().addClass('ratings_over');
+		});
+		$('.ratings_stars').mouseout(function() {
+			$(this).prevAll().addBack().removeClass('ratings_over');
+		});
+
+		/* přehrávání videa v iframe */
+		//při prvním kliknutí video zobrazíme, pak už jen přepisujem
+		$('.yt-videa').one('click', 'a.watch', function(e) {
+			$('#video').show();
+			e.preventDefault();
+		});
+		$('.yt-videa').on('click', 'a.watch', function(e) {
+			$('#video').show();
+			$('#nahrazeni').replaceWith('<iframe class="embed-responsive-item" id="nahrazeni" src="https://www.youtube.com/embed/' + this.id + '?autoplay=1" allowfullscreen></iframe>');
+			//odsunutí videa pod navigaci
+			var vyska_menu = document.getElementById('menu').offsetHeight,
+			top = document.getElementById('video').offsetTop;
+			$('html, body').animate({ scrollTop: top-vyska_menu }, 'fast');
+			e.preventDefault();
+		});
+
+		/* zobrazení formuláře pro odeslání komentáře */
+		$('#com-form-vloz').click(function(e) {
+			$(this).hide();
+			$('.com-form').show();
+			e.preventDefault();
+		});
+	</script>
+{/block}

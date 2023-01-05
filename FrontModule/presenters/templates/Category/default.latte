@@ -1,0 +1,116 @@
+{block title}{$category->nazev} - Kategorie | Dejbod.cz{/block}
+{block description}{$category->popis|striptags|truncate:160}{/block}
+{block content}
+    <header class="container-fluid cat-header" style="background-image: url('{$basePath}/images/kategorie/kat_{$category->id}.jpg')">
+        <div class="row text-center">
+            <div class="col">
+                <h1 class="">Kategorie {$category->nazev}</h1>
+                <p class="">{$category->popis}</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="container cat-section">
+        <div class="row">
+            <div class="col pocet ml-xl-2 ml-lg-1 ml-0">
+                {$numberYoutubers} YOUTUBERŮ
+            </div>
+            <div class="col mr-4 text-right">
+                <div n:if="$youtubers" class="dropdown show">
+                    <a class="dropdown-toggle sort-toggle" href="#" role="button" id="dropdownSortCat" data-toggle="dropdown" data-offset="0px, -50px" aria-haspopup="true" aria-expanded="false">
+                        ŘADIT DLE
+                    </a>
+                    <div class="dropdown-menu sort-menu" aria-labelledby="dropdownSortCat">
+                        <h6 class="dropdown-header sort-header">ŘADIT DLE</h6>
+                        <a class="dropdown-item sort-item ajax" n:href="sortCategory! $idCategory,0">HODNOCENÍ</a>
+                        <a class="dropdown-item sort-item ajax" n:href="sortCategory! $idCategory,1">ODBĚRATELŮ</a>
+                        <a class="dropdown-item sort-item ajax" n:href="sortCategory! $idCategory,2">ABECEDY</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row radka-top">
+            <div class="col-2 col-sm-1 text-center">
+                POŘADÍ
+            </div>
+            <div class="col-4 col-sm-6 col-md-2 text-md-center text-left">
+                YOUTUBER
+            </div>
+            <div class="col-2 offset-1 offset-md-4 col-sm-1 text-center">
+                RATING
+            </div>
+            <div class="col-3 col-sm-3 col-md-2 text-center">
+                ODBĚRATELÉ
+            </div>
+            <div class="d-none d-md-block col-md-2 text-center">
+
+            </div>
+        </div>
+        {snippet sortCat}
+            <div n:snippet="moreCat" n:if="$youtubers" data-ajax-append="snippets">
+            {foreach $youtubers as $youtuber}
+                <div class="row radka">
+                    <div class="col-2 col-sm-1 text-center">
+                       {$iterator->getCounter()+$offset}.
+                    </div>
+                    <div class="d-none d-md-block col-md-2 text-center">
+                        <a n:href="Youtuber:default $youtuber->slug"><img class="rounded-circle" src="{$youtuber->foto|replace:'s240', 's72'}" alt="fotka"></a>
+                    </div>
+                    <div class="col-5 col-sm-7 col-md-4 text-left">
+                        <a n:href="Youtuber:default $youtuber->slug">{$youtuber->jmeno}</a>
+                    </div>
+                    <div class="col-2 col-sm-1 text-center">
+                        {$youtuber->hodnoceni|number:1}
+                    </div>
+                    <div class="col-3 col-sm-3 col-md-2 text-center">
+                        {$youtuber->odberatele}
+                    </div>
+                    <div class="d-none d-md-block col-md-2 text-center">
+                        <a n:href="Youtuber:default $youtuber->slug" class="btn" role="button" aria-pressed="true">Detail</a>
+                    </div>
+                </div>
+            {/foreach}
+            </div>
+            {snippet moreCatButton}
+                <div class="d-flex justify-content-center align-items-center btn-com mx-auto">
+                    {if $youtubers}
+                        <a n:href="moreCategories! $offset, $idCategory, $sortCategory" class="btn ajax" role="button" aria-pressed="true">Další youtubeři</a>
+                    {else}
+                        <a class="btn" role="button" aria-pressed="true">Žádní další youtubeři</a>
+                    {/if}
+                </div>
+            {/snippet}
+        {/snippet}
+    </section>
+{/block}
+
+{block scripts}
+    {include parent}
+    <!-- infinite scroll -->
+    <script>
+		var loadingFinished = true;
+
+		$.nette.ext({
+			complete: function(jqXHR, settings) {
+				if (!loadingFinished) {
+					loadingFinished = true;
+				}
+			}
+		});
+
+		if ($("a.btn.ajax").length) {
+			window.setInterval(function() {
+				var offset = 250;
+				var $footer = $("footer");
+
+				var docViewBottom = $(window).scrollTop() + $(window).height();
+				var elemTop = $footer.offset().top;
+
+				if ((docViewBottom + offset) > elemTop && loadingFinished) {
+					loadingFinished = false;
+					$("a.btn.ajax").click();
+				}
+			}, 500);
+		}
+    </script>
+{/block}
